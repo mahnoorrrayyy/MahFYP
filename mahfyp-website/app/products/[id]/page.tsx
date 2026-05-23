@@ -2,6 +2,7 @@ import { supabase } from "@/lib/supabase";
 import { Package } from "lucide-react";
 import type { Product } from "@/lib/types";
 import Link from "next/link";
+import AddToCartButton from "@/components/AddToCartButton";
 
 async function getProduct(id: string): Promise<Product | null> {
   const { data, error } = await supabase
@@ -105,9 +106,13 @@ export default async function ProductPage({
             <div className="bg-white rounded-2xl border border-plum-100 p-5 flex flex-col gap-3">
               <h3 className="font-semibold text-plum-900 text-sm">Where to buy</h3>
 
-              <button className="w-full flex items-center justify-center gap-2 bg-plum-700 text-white font-medium py-3 rounded-xl hover:bg-plum-900 transition-colors">
-                Add to Cart — Buy from Us
-              </button>
+              <AddToCartButton
+  id={product.id}
+  product_name={product.product_name}
+  brand_name={product.brand_name || ""}
+  price={parseFloat(product.price || "0")}
+  image_url={product.image_url || ""}
+/>
 
               <Link
                 href={product.url || "#"}
