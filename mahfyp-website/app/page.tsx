@@ -174,7 +174,6 @@ export default async function HomePage() {
         src={brand.logo}
         alt={brand.name}
         className="max-h-10 max-w-full object-contain grayscale group-hover:grayscale-0 transition-all"
-        onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
       />
     </div>
     <div>
