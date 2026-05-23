@@ -32,14 +32,14 @@ export default async function ProductPage({
     );
   }
 
-  const concerns = product.concerns_str
-    ? product.concerns_str.split(",").map((c) => c.trim()).filter(Boolean)
-    : [];
+  const concerns = product.concerns_str && product.concerns_str !== "Not Found"
+  ? product.concerns_str.split(",").map((c) => c.trim()).filter(Boolean)
+  : [];
 
   const ingredients =
-    product.ingredients !== "Not Found"
-      ? product.ingredients.split(",").map((i) => i.trim()).filter(Boolean)
-      : [];
+  product.ingredients && product.ingredients !== "Not Found"
+    ? product.ingredients.split(",").map((i) => i.trim()).filter(Boolean)
+    : [];
 
   return (
     <div className="min-h-screen bg-cream">
