@@ -33,13 +33,13 @@ export default function AdminPage() {
       setMessage(`Found ${rows.length} products. Uploading to Supabase...`);
 
       const records = rows.map((row) => ({
-      product_name        : row["Product Name"] || "",
-      brand_name          : row["Brand"] || "",
-      price               : row["Price (PKR)"] ? String(row["Price (PKR)"]) : "",
-      description         : row["Description"] || "",
-      ingredients         : row["Ingredients"] || "",
-      image_url           : row["Image URL"] || "",
-      url                 : row["Product URL"] || "",
+      product_name        : row["product_name"] || row["Product Name"] || "",
+      brand_name          : row["brand_name"] || row["Brand"] || "",
+      price               : row["price"] ? String(row["price"]) : row["Price (PKR)"] ? String(row["Price (PKR)"]) : "",
+      description         : row["description"] || row["Description"] || "",
+      ingredients         : row["ingredients"] || row["Ingredients"] || "",
+      image_url           : row["image_url"] || row["Image URL"] || "",
+      url                 : row["url"] || row["Product URL"] || "",
       concerns_str        : row["concerns_str"] || row["Concerns"] || "",
       score_combination   : parseFloat(row["score_combination"]) || 0,
       score_dry           : parseFloat(row["score_dry"]) || 0,
