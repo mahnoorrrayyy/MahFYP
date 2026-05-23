@@ -71,7 +71,7 @@ export default async function HomePage() {
   return (
     <div className="min-h-screen">
 
-      {/* ── Hero ─────────────────────────────────────────── */}
+    {/* ── Hero ─────────────────────────────────────────── */}
 <section className="bg-plum-900 relative overflow-hidden min-h-[90vh] flex items-center">
 
   {/* Background video */}
@@ -85,16 +85,62 @@ export default async function HomePage() {
     <source src="/hero.mp4" type="video/mp4" />
   </video>
 
-  {/* Dark + plum colour overlay on top of video */}
+  {/* Overlay */}
   <div className="absolute inset-0 bg-plum-900/75" />
 
-  {/* All existing hero content — wrap in relative z-10 */}
+  {/* Content */}
   <div className="relative z-10 max-w-6xl mx-auto px-5 py-20 w-full">
-    {/* ... rest of hero content unchanged ... */}
+    <div className="max-w-2xl">
+      <div className="inline-flex items-center gap-2 bg-plum-700/50 border border-plum-700 rounded-full px-4 py-1.5 mb-6">
+        <Star size={12} className="text-gold fill-gold" />
+        <span className="text-xs font-medium text-plum-200 tracking-wide uppercase">
+          AI-Powered Skincare
+        </span>
+      </div>
+
+      <h1 className="text-4xl md:text-6xl font-semibold text-white leading-tight mb-6">
+        Beauty isn&apos;t made.{" "}
+        <span className="text-gold">It&apos;s revealed.</span>
+      </h1>
+
+      <p className="text-lg text-plum-200 leading-relaxed mb-10 max-w-xl">
+        Tell us your skin type and we&apos;ll match you with the best local
+        Pakistani skincare products — based on ingredient science, not trends.
+      </p>
+
+      <div className="flex flex-col sm:flex-row gap-3">
+        <Link
+          href="/recommend"
+          className="inline-flex items-center justify-center gap-2 bg-gold text-plum-900 font-semibold px-7 py-3.5 rounded-full hover:brightness-110 transition-all text-sm"
+        >
+          Find My Skincare Match <ArrowRight size={16} />
+        </Link>
+        <Link
+          href="/products"
+          className="inline-flex items-center justify-center gap-2 border border-plum-500 text-plum-200 px-7 py-3.5 rounded-full hover:bg-plum-700/30 transition-all text-sm"
+        >
+          Browse All Products
+        </Link>
+      </div>
+    </div>
+
+    {/* Stats */}
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16 pt-16 border-t border-plum-700">
+      {[
+        { value: "150+", label: "Products" },
+        { value: "4",    label: "Local Brands" },
+        { value: "5",    label: "Skin Types" },
+        { value: "6",    label: "Skin Concerns" },
+      ].map((s) => (
+        <div key={s.label}>
+          <div className="text-2xl md:text-3xl font-bold text-gold">{s.value}</div>
+          <div className="text-sm text-plum-200 mt-1">{s.label}</div>
+        </div>
+      ))}
+    </div>
   </div>
 
 </section>
-
       {/* ── Skin type pills ──────────────────────────────── */}
       <section className="bg-plum-50 border-b border-plum-100 py-5">
         <div className="max-w-6xl mx-auto px-5">
