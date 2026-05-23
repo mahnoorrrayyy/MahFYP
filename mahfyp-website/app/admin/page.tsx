@@ -45,7 +45,8 @@ export default function AdminPage() {
       for (let i = 0; i < records.length; i += batchSize) {
         const batch = records.slice(i, i + batchSize);
         const { error } = await supabase.from("products").upsert(batch, {
-          onConflict: "url",   // update if URL already exists
+          onConflict: "url",
+          ignoreDuplicates: false,
         });
         if (error) throw new Error(error.message);
         setMessage(`Uploaded ${Math.min(i + batchSize, records.length)} / ${records.length}...`);
