@@ -13,25 +13,32 @@ async function getProduct(id: string): Promise<Product | null> {
   return data;
 }
 
-export default async function ProductPage({ params }: { params: { id: string } }) {
+export default async function ProductPage({
+  params,
+}: {
+  params: { id: string };
+}) {
   const product = await getProduct(params.id);
 
   if (!product) {
     return (
       <div className="max-w-6xl mx-auto px-5 py-20 text-center">
         <h1 className="text-2xl font-semibold text-plum-900">Product not found</h1>
-        <Link href="/products" className="text-plum-700 hover:underline mt-4 inline-block">← Back to products</Link>
+        <Link href="/products" className="text-plum-700 hover:underline mt-4 inline-block">
+          Back to products
+        </Link>
       </div>
     );
   }
 
   const concerns = product.concerns_str
-    ? product.concerns_str.split(",").map(c => c.trim()).filter(Boolean)
+    ? product.concerns_str.split(",").map((c) => c.trim()).filter(Boolean)
     : [];
 
-  const ingredients = product.ingredients !== "Not Found"
-    ? product.ingredients.split(",").map(i => i.trim()).filter(Boolean)
-    : [];
+  const ingredients =
+    product.ingredients !== "Not Found"
+      ? product.ingredients.split(",").map((i) => i.trim()).filter(Boolean)
+      : [];
 
   return (
     <div className="min-h-screen bg-cream">
@@ -50,9 +57,9 @@ export default async function ProductPage({ params }: { params: { id: string } }
 
           {/* Product image */}
           <div className="bg-white rounded-2xl border border-plum-100 overflow-hidden aspect-square flex items-center justify-center p-8">
-            {(product as Product & { image_url?: string }).image_url ? (
+            {product.image_url ? (
               <img
-                src={(product as Product & { image_url?: string }).image_url}
+                src={product.image_url}
                 alt={product.product_name}
                 className="max-h-full max-w-full object-contain"
               />
@@ -66,6 +73,7 @@ export default async function ProductPage({ params }: { params: { id: string } }
 
           {/* Product info */}
           <div className="flex flex-col gap-5">
+
             <span className="text-sm font-medium text-plum-500 bg-plum-50 px-3 py-1 rounded-full self-start">
               {product.brand_name}
             </span>
@@ -74,17 +82,19 @@ export default async function ProductPage({ params }: { params: { id: string } }
               {product.product_name}
             </h1>
 
-            {(product as Product & { price?: string }).price && (
+            {product.price && (
               <div className="text-2xl font-bold text-plum-700">
-                PKR {(product as Product & { price?: string }).price}
+                PKR {product.price}
               </div>
             )}
 
-            {/* Concern tags */}
             {concerns.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {concerns.map((c) => (
-                  <span key={c} className="text-xs bg-amber-50 text-amber-800 border border-amber-200 px-3 py-1 rounded-full capitalize">
+                  <span
+                    key={c}
+                    className="text-xs bg-amber-50 text-amber-800 border border-amber-200 px-3 py-1 rounded-full capitalize"
+                  >
                     {c.replace("_", " ")}
                   </span>
                 ))}
@@ -95,24 +105,21 @@ export default async function ProductPage({ params }: { params: { id: string } }
             <div className="bg-white rounded-2xl border border-plum-100 p-5 flex flex-col gap-3">
               <h3 className="font-semibold text-plum-900 text-sm">Where to buy</h3>
 
-              {/* Buy from us */}
               <button className="w-full flex items-center justify-center gap-2 bg-plum-700 text-white font-medium py-3 rounded-xl hover:bg-plum-900 transition-colors">
                 <ShoppingCart size={18} />
                 Add to Cart — Buy from Us
               </button>
 
-              {/* Buy from brand */}
               
-                href={product.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full flex items-center justify-center gap-2 border border-plum-200 text-plum-700 font-medium py-3 rounded-xl hover:bg-plum-50 transition-colors"
-              >
-                <ExternalLink size={16} />
-                Buy from {product.brand_name} directly
-              </a>
+                <button
+  onClick={() => window.open(product.url, "_blank")}
+  className="w-full flex items-center justify-center gap-2 border border-plum-200 text-plum-700 font-medium py-3 rounded-xl hover:bg-plum-50 transition-colors"
+>
+  <ExternalLink size={16} />
+  Buy from {product.brand_name} directly
+</button>
 
-              {/* Out of stock fallback */}
+
               <p className="text-xs text-plum-400 text-center">
                 If out of stock, use the brand link above for other buying options.
               </p>
@@ -121,7 +128,7 @@ export default async function ProductPage({ params }: { params: { id: string } }
           </div>
         </div>
 
-        {/* Ingredients section */}
+        {/* Ingredients */}
         {ingredients.length > 0 && (
           <div className="mt-10 bg-white rounded-2xl border border-plum-100 p-8">
             <h2 className="font-semibold text-plum-900 text-lg mb-4">Ingredients</h2>
