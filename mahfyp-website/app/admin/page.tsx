@@ -61,17 +61,17 @@ export default function AdminPage() {
       return true;
     });
       const batchSize = 50;
-      for (let i = 0; i < records.length; i += batchSize) {
-        const batch = records.slice(i, i + batchSize);
+      for (let i = 0; i < dedupedRecords.length; i += batchSize) {
+        const batch = dedupedRecords.slice(i, i + batchSize);
         const { error } = await adminSupabase
           .from("products")
           .upsert(batch, { onConflict: "url", ignoreDuplicates: false });
         if (error) throw new Error(error.message);
-        setMessage(`Uploaded ${Math.min(i + batchSize, records.length)} / ${records.length}...`);
+        setMessage(`Uploaded ${Math.min(i + batchSize, dedupedRecords.length)} / ${dedupedRecords.length}...`);
       }
 
       setStatus("success");
-      setMessage(`✅ ${records.length} products uploaded successfully!`);
+      setMessage(`✅ ${dedupedRecords.length} products uploaded successfully!`);
 
     } catch (err: unknown) {
       setStatus("error");
