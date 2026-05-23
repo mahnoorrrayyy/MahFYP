@@ -1,5 +1,5 @@
 import { supabase } from "@/lib/supabase";
-import { ExternalLink, ShoppingCart, Package } from "lucide-react";
+import { Package } from "lucide-react";
 import type { Product } from "@/lib/types";
 import Link from "next/link";
 
@@ -10,7 +10,7 @@ async function getProduct(id: string): Promise<Product | null> {
     .eq("id", id)
     .single();
   if (error) return null;
-  return data;
+  return data as Product;
 }
 
 export default async function ProductPage({
@@ -33,11 +33,10 @@ export default async function ProductPage({
   }
 
   const concerns = product.concerns_str && product.concerns_str !== "Not Found"
-  ? product.concerns_str.split(",").map((c) => c.trim()).filter(Boolean)
-  : [];
+    ? product.concerns_str.split(",").map((c) => c.trim()).filter(Boolean)
+    : [];
 
-  const ingredients =
-  product.ingredients && product.ingredients !== "Not Found"
+  const ingredients = product.ingredients && product.ingredients !== "Not Found"
     ? product.ingredients.split(",").map((i) => i.trim()).filter(Boolean)
     : [];
 
@@ -107,19 +106,16 @@ export default async function ProductPage({
               <h3 className="font-semibold text-plum-900 text-sm">Where to buy</h3>
 
               <button className="w-full flex items-center justify-center gap-2 bg-plum-700 text-white font-medium py-3 rounded-xl hover:bg-plum-900 transition-colors">
-                <ShoppingCart size={18} />
                 Add to Cart — Buy from Us
               </button>
 
-              
-                <button
-  onClick={() => window.open(product.url, "_blank")}
-  className="w-full flex items-center justify-center gap-2 border border-plum-200 text-plum-700 font-medium py-3 rounded-xl hover:bg-plum-50 transition-colors"
->
-  <ExternalLink size={16} />
-  Buy from {product.brand_name} directly
-</button>
-
+              <Link
+                href={product.url || "#"}
+                target="_blank"
+                className="w-full flex items-center justify-center gap-2 border border-plum-200 text-plum-700 font-medium py-3 rounded-xl hover:bg-plum-50 transition-colors"
+              >
+                Buy from {product.brand_name} directly
+              </Link>
 
               <p className="text-xs text-plum-400 text-center">
                 If out of stock, use the brand link above for other buying options.
