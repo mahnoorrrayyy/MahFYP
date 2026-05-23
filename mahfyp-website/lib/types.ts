@@ -1,0 +1,18 @@
+export type Product = {
+  id: string;
+  product_name: string;
+  brand_name: string;
+  url: string;
+  ingredients: string;
+  concerns_str: string;
+  score_combination: number;
+  score_dry: number;
+  score_normal: number;
+  score_oily: number;
+  score_sensitive: number;
+  suitable_combination: number;
+  suitable_dry: number;
+  suitable_normal: number;
+  suitable_oily: number;
+  suitable_sensitive: number;
+};
