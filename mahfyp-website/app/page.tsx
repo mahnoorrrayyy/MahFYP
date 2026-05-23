@@ -11,7 +11,7 @@ async function getFeaturedProducts(): Promise<Product[]> {
     .not("ingredients", "is", null)
     .limit(8);
   if (error) { console.error(error); return []; }
-  return data || [];
+  return (data as Product[]) || [];
 }
 
 const BRANDS = [

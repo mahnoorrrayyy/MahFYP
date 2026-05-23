@@ -9,11 +9,8 @@ async function getProducts(brand?: string): Promise<Product[]> {
     query = query.eq("brand_name", brand);
   }
   const { data, error } = await query.order("product_name").limit(100);
-  if (error) {
-    console.error(error);
-    return [];
-  }
-  return data || [];
+  if (error) { console.error(error); return []; }
+  return (data as Product[]) || [];
 }
 
 const BRANDS = [
