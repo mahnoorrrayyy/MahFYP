@@ -33,16 +33,33 @@ export default function AdminPage() {
       setMessage(`Found ${rows.length} products. Uploading to Supabase...`);
 
       const records = rows.map((row) => ({
-        product_name : row["Product Name"] || "",
-        brand_name   : row["Brand"] || "",
-        price        : row["Price (PKR)"] || "",
-        description  : row["Description"] || "",
-        ingredients  : row["Ingredients"] || "",
-        image_url    : row["Image URL"] || "",
-        url          : row["Product URL"] || "",
-        concerns_str : row["Concerns"] || "",
-      }));
+      product_name        : row["Product Name"] || "",
+      brand_name          : row["Brand"] || "",
+      price               : row["Price (PKR)"] ? String(row["Price (PKR)"]) : "",
+      description         : row["Description"] || "",
+      ingredients         : row["Ingredients"] || "",
+      image_url           : row["Image URL"] || "",
+      url                 : row["Product URL"] || "",
+      concerns_str        : row["concerns_str"] || row["Concerns"] || "",
+      score_combination   : parseFloat(row["score_combination"]) || 0,
+      score_dry           : parseFloat(row["score_dry"]) || 0,
+      score_normal        : parseFloat(row["score_normal"]) || 0,
+      score_oily          : parseFloat(row["score_oily"]) || 0,
+      score_sensitive     : parseFloat(row["score_sensitive"]) || 0,
+      suitable_combination: parseInt(row["suitable_combination"]) || 0,
+      suitable_dry        : parseInt(row["suitable_dry"]) || 0,
+      suitable_normal     : parseInt(row["suitable_normal"]) || 0,
+      suitable_oily       : parseInt(row["suitable_oily"]) || 0,
+      suitable_sensitive  : parseInt(row["suitable_sensitive"]) || 0,
+    }));
 
+    // Remove duplicate URLs before uploading
+    const seen = new Set();
+    const dedupedRecords = records.filter((r) => {
+      if (!r.url || seen.has(r.url)) return false;
+      seen.add(r.url);
+      return true;
+    });
       const batchSize = 50;
       for (let i = 0; i < records.length; i += batchSize) {
         const batch = records.slice(i, i + batchSize);
