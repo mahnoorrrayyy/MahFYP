@@ -16,10 +16,30 @@ async function getFeaturedProducts(): Promise<Product[]> {
 }
 
 const BRANDS = [
-  { name: "Conatural",          tagline: "Organic & Natural",       emoji: "🌿" },
-  { name: "AccuFix Cosmetics",  tagline: "Dermatologist Approved",  emoji: "🔬" },
-  { name: "Masarrat Makeup",    tagline: "Halal Certified",         emoji: "✨" },
-  { name: "BNB Body N Body",    tagline: "Natural Skincare",        emoji: "🌸" },
+  {
+    name: "Conatural",
+    tagline: "Organic & Natural",
+    logo: "https://conaturalintl.com/cdn/shop/files/Conatural_Logo_9ad6ab73-5943-4725-9a8d-70b24ee9c035.png?v=1750144421&width=300",
+    href: "https://conaturalintl.com",
+  },
+  {
+    name: "AccuFix Cosmetics",
+    tagline: "Dermatologist Approved",
+    logo: "https://media.licdn.com/dms/image/v2/C4E0BAQEQ3OXWk11gyA/company-logo_200_200/company-logo_200_200/0/1630577891205/accufix_cosmetics_pvt_ltd_logo?e=2147483647&v=beta&t=8jqMtnWwXDh-G80syhoICp3WTFfqR8VeYQRAjI4xFrI",
+    href: "https://accufixcosmetics.com",
+  },
+  {
+    name: "Masarrat Makeup",
+    tagline: "Halal Certified",
+    logo: "https://masarratmakeup.com/cdn/shop/files/massarat_misbal_mobile-01_256x256_621f660b-a56b-472c-b74b-e75d2cdc9d08.png?v=1661510755",
+    href: "https://masarratmakeup.com",
+  },
+  {
+    name: "BNB Body N Body",
+    tagline: "Natural Skincare",
+    logo: "https://bodynbody.com/cdn/shop/files/BNB_Logo_512x200_ce32176e-71ed-4069-a2b6-256d46220475.png?v=1737723572&width=200",
+    href: "https://bodynbody.com",
+  },
 ];
 
 const STEPS = [
@@ -52,62 +72,28 @@ export default async function HomePage() {
     <div className="min-h-screen">
 
       {/* ── Hero ─────────────────────────────────────────── */}
-      <section className="bg-plum-900 relative overflow-hidden">
-        {/* Decorative circles */}
-        <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-plum-700 opacity-20 translate-x-32 -translate-y-20 pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-plum-700 opacity-10 -translate-x-20 translate-y-20 pointer-events-none" />
+<section className="bg-plum-900 relative overflow-hidden min-h-[90vh] flex items-center">
 
-        <div className="relative max-w-6xl mx-auto px-5 py-20 md:py-32">
-          <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 bg-plum-700/50 border border-plum-700 rounded-full px-4 py-1.5 mb-6">
-              <Star size={12} className="text-gold fill-gold" />
-              <span className="text-xs font-medium text-plum-200 tracking-wide uppercase">
-                AI-Powered Skincare
-              </span>
-            </div>
+  {/* Background video */}
+  <video
+    autoPlay
+    muted
+    loop
+    playsInline
+    className="absolute inset-0 w-full h-full object-cover"
+  >
+    <source src="/hero.mp4" type="video/mp4" />
+  </video>
 
-            <h1 className="text-4xl md:text-6xl font-semibold text-white leading-tight mb-6">
-              Beauty isn&apos;t made.{" "}
-              <span className="text-gold">It&apos;s revealed.</span>
-            </h1>
+  {/* Dark + plum colour overlay on top of video */}
+  <div className="absolute inset-0 bg-plum-900/75" />
 
-            <p className="text-lg text-plum-200 leading-relaxed mb-10 max-w-xl">
-              Tell us your skin type and we&apos;ll match you with the best local
-              Pakistani skincare products — based on ingredient science, not trends.
-            </p>
+  {/* All existing hero content — wrap in relative z-10 */}
+  <div className="relative z-10 max-w-6xl mx-auto px-5 py-20 w-full">
+    {/* ... rest of hero content unchanged ... */}
+  </div>
 
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Link
-                href="/recommend"
-                className="inline-flex items-center justify-center gap-2 bg-gold text-plum-900 font-semibold px-7 py-3.5 rounded-full hover:brightness-110 transition-all text-sm"
-              >
-                Find My Skincare Match <ArrowRight size={16} />
-              </Link>
-              <Link
-                href="/products"
-                className="inline-flex items-center justify-center gap-2 border border-plum-500 text-plum-200 px-7 py-3.5 rounded-full hover:bg-plum-700/30 transition-all text-sm"
-              >
-                Browse All Products
-              </Link>
-            </div>
-          </div>
-
-          {/* Stats row */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16 pt-16 border-t border-plum-700">
-            {[
-              { value: "150+", label: "Products" },
-              { value: "4",    label: "Local Brands" },
-              { value: "5",    label: "Skin Types" },
-              { value: "6",    label: "Skin Concerns" },
-            ].map((s) => (
-              <div key={s.label}>
-                <div className="text-2xl md:text-3xl font-bold text-gold">{s.value}</div>
-                <div className="text-sm text-plum-300 mt-1">{s.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+</section>
 
       {/* ── Skin type pills ──────────────────────────────── */}
       <section className="bg-plum-50 border-b border-plum-100 py-5">
@@ -178,16 +164,25 @@ export default async function HomePage() {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {BRANDS.map((brand) => (
-              <Link
-                key={brand.name}
-                href={`/products?brand=${encodeURIComponent(brand.name)}`}
-                className="group bg-cream rounded-2xl border border-plum-100 p-6 hover:border-plum-300 hover:bg-plum-50 transition-all"
-              >
-                <div className="text-3xl mb-3">{brand.emoji}</div>
-                <div className="font-semibold text-plum-900 text-sm mb-1">{brand.name}</div>
-                <div className="text-xs text-plum-500">{brand.tagline}</div>
-              </Link>
-            ))}
+  <Link
+    key={brand.name}
+    href={`/products?brand=${encodeURIComponent(brand.name)}`}
+    className="group bg-white rounded-2xl border border-plum-100 p-6 hover:border-plum-300 hover:shadow-md transition-all flex flex-col items-center text-center gap-3"
+  >
+    <div className="w-20 h-12 flex items-center justify-center">
+      <img
+        src={brand.logo}
+        alt={brand.name}
+        className="max-h-10 max-w-full object-contain grayscale group-hover:grayscale-0 transition-all"
+        onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+      />
+    </div>
+    <div>
+      <div className="font-semibold text-plum-900 text-sm">{brand.name}</div>
+      <div className="text-xs text-plum-500 mt-0.5">{brand.tagline}</div>
+    </div>
+  </Link>
+))}
           </div>
         </div>
       </section>

@@ -5,6 +5,9 @@ export type Product = {
   url: string;
   ingredients: string;
   concerns_str: string;
+  price?: string;
+  description?: string;
+  image_url?: string;
   score_combination: number;
   score_dry: number;
   score_normal: number;
