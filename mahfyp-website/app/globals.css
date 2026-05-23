@@ -1,15 +1,20 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-:root {
-  --font-inter: "Inter", sans-serif;
+@theme {
+  --color-cream: #FDFAF7;
+  --color-plum-50: #F9F4F8;
+  --color-plum-100: #F0E2EC;
+  --color-plum-200: #DEB9D1;
+  --color-plum-500: #A0527E;
+  --color-plum-700: #6E2B55;
+  --color-plum-900: #2D1133;
+  --color-gold: #C9956C;
 }
 
 body {
   background-color: #FDFAF7;
   color: #1C1118;
+  font-family: var(--font-inter), sans-serif;
 }
 
-/* Smooth scrolling */
 html { scroll-behavior: smooth; }

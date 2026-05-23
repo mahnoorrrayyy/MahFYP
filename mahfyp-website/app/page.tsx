@@ -1,115 +1,156 @@
 import Link from "next/link";
-import { ArrowRight, Sparkles, FlaskConical, ShoppingBag } from "lucide-react";
+import { ArrowRight, Sparkles, FlaskConical, ShoppingBag, Star } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import type { Product } from "@/lib/types";
 import ProductCard from "@/components/ProductCard";
 
-// ── Fetch a few featured products from Supabase ──────────────────────────
 async function getFeaturedProducts(): Promise<Product[]> {
   const { data, error } = await supabase
     .from("products")
     .select("*")
     .not("ingredients", "eq", "Not Found")
+    .order("score_combination", { ascending: false })
     .limit(8);
   if (error) { console.error(error); return []; }
   return data || [];
 }
 
-// ── Top brands data (static — add logo URLs if you have them) ─────────────
 const BRANDS = [
-  { name: "Conatural",         tagline: "Organic & Natural",       color: "bg-green-50  border-green-200" },
-  { name: "AccuFix Cosmetics", tagline: "Dermatologist Approved",  color: "bg-blue-50   border-blue-200"  },
-  { name: "Masarrat Makeup",   tagline: "Halal Certified",         color: "bg-pink-50   border-pink-200"  },
-  { name: "BNB Body N Body",   tagline: "Natural Skincare",        color: "bg-amber-50  border-amber-200" },
+  { name: "Conatural",          tagline: "Organic & Natural",       emoji: "🌿" },
+  { name: "AccuFix Cosmetics",  tagline: "Dermatologist Approved",  emoji: "🔬" },
+  { name: "Masarrat Makeup",    tagline: "Halal Certified",         emoji: "✨" },
+  { name: "BNB Body N Body",    tagline: "Natural Skincare",        emoji: "🌸" },
 ];
 
-// ── How it works steps ────────────────────────────────────────────────────
 const STEPS = [
   {
-    icon: <Sparkles size={28} className="text-plum-700" />,
+    icon: <Sparkles size={22} />,
+    step: "01",
     title: "Tell us your skin type",
     desc: "Answer 3 quick questions about your skin — oily, dry, combination, sensitive, or normal.",
   },
   {
-    icon: <FlaskConical size={28} className="text-plum-700" />,
-    title: "We match ingredients",
-    desc: "Our ML model scans ingredient lists of 300+ local products and finds what suits your skin.",
+    icon: <FlaskConical size={22} />,
+    step: "02",
+    title: "We analyse ingredients",
+    desc: "Our ML model scans ingredient lists of 300+ local products and finds what suits your skin best.",
   },
   {
-    icon: <ShoppingBag size={28} className="text-plum-700" />,
-    title: "Get local recommendations",
-    desc: "Discover the best Pakistani skincare products for you — with links to buy them directly.",
+    icon: <ShoppingBag size={22} />,
+    step: "03",
+    title: "Get your matches",
+    desc: "Discover the best Pakistani skincare products for your exact skin type and concerns.",
   },
 ];
+
+const SKIN_TYPES = ["Oily", "Dry", "Combination", "Normal", "Sensitive"];
 
 export default async function HomePage() {
   const featured = await getFeaturedProducts();
 
   return (
-    <>
-      {/* ── Hero ─────────────────────────────────────────────── */}
-      <section className="bg-plum-900 text-white">
-        <div className="max-w-6xl mx-auto px-6 py-24 md:py-32 grid md:grid-cols-2 gap-12 items-center">
-          <div>
-            <span className="inline-block text-xs font-semibold tracking-widest uppercase text-gold mb-4">
-              AI-Powered Skincare
-            </span>
-            <h1 className="text-4xl md:text-5xl font-semibold leading-tight mb-6">
-              Beauty isn&apos;t made.
-              <br />
+    <div className="min-h-screen">
+
+      {/* ── Hero ─────────────────────────────────────────── */}
+      <section className="bg-plum-900 relative overflow-hidden">
+        {/* Decorative circles */}
+        <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-plum-700 opacity-20 translate-x-32 -translate-y-20 pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-plum-700 opacity-10 -translate-x-20 translate-y-20 pointer-events-none" />
+
+        <div className="relative max-w-6xl mx-auto px-5 py-20 md:py-32">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 bg-plum-700/50 border border-plum-700 rounded-full px-4 py-1.5 mb-6">
+              <Star size={12} className="text-gold fill-gold" />
+              <span className="text-xs font-medium text-plum-200 tracking-wide uppercase">
+                AI-Powered Skincare
+              </span>
+            </div>
+
+            <h1 className="text-4xl md:text-6xl font-semibold text-white leading-tight mb-6">
+              Beauty isn&apos;t made.{" "}
               <span className="text-gold">It&apos;s revealed.</span>
             </h1>
-            <p className="text-plum-200 text-lg mb-8 leading-relaxed">
-              Tell us your skin type and concerns. We match you with the best
-              local Pakistani skincare products — based on science, not trends.
+
+            <p className="text-lg text-plum-200 leading-relaxed mb-10 max-w-xl">
+              Tell us your skin type and we&apos;ll match you with the best local
+              Pakistani skincare products — based on ingredient science, not trends.
             </p>
-            <div className="flex flex-wrap gap-4">
+
+            <div className="flex flex-col sm:flex-row gap-3">
               <Link
                 href="/recommend"
-                className="flex items-center gap-2 bg-gold text-plum-900 font-semibold px-7 py-3 rounded-full hover:brightness-105 transition"
+                className="inline-flex items-center justify-center gap-2 bg-gold text-plum-900 font-semibold px-7 py-3.5 rounded-full hover:brightness-110 transition-all text-sm"
               >
-                Find My Skincare <ArrowRight size={18} />
+                Find My Skincare Match <ArrowRight size={16} />
               </Link>
               <Link
                 href="/products"
-                className="flex items-center gap-2 border border-plum-200 text-white px-7 py-3 rounded-full hover:bg-plum-700 transition"
+                className="inline-flex items-center justify-center gap-2 border border-plum-500 text-plum-200 px-7 py-3.5 rounded-full hover:bg-plum-700/30 transition-all text-sm"
               >
-                Browse Products
+                Browse All Products
               </Link>
             </div>
           </div>
 
-          {/* Hero visual — stat cards */}
-          <div className="hidden md:grid grid-cols-2 gap-4">
+          {/* Stats row */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16 pt-16 border-t border-plum-700">
             {[
-              { value: "300+", label: "Local Products" },
-              { value: "4",    label: "Pakistani Brands" },
-              { value: "5",    label: "Skin Types Covered" },
+              { value: "150+", label: "Products" },
+              { value: "4",    label: "Local Brands" },
+              { value: "5",    label: "Skin Types" },
               { value: "6",    label: "Skin Concerns" },
-            ].map((stat) => (
-              <div
-                key={stat.label}
-                className="bg-plum-700/50 border border-plum-700 rounded-2xl p-6"
-              >
-                <div className="text-3xl font-bold text-gold">{stat.value}</div>
-                <div className="text-sm text-plum-200 mt-1">{stat.label}</div>
+            ].map((s) => (
+              <div key={s.label}>
+                <div className="text-2xl md:text-3xl font-bold text-gold">{s.value}</div>
+                <div className="text-sm text-plum-300 mt-1">{s.label}</div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── How it works ─────────────────────────────────────── */}
-      <section className="py-20 bg-cream">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-14">
-            <h2 className="text-3xl font-semibold text-plum-900">How it works</h2>
-            <p className="text-plum-500 mt-3">Three steps to your perfect routine</p>
+      {/* ── Skin type pills ──────────────────────────────── */}
+      <section className="bg-plum-50 border-b border-plum-100 py-5">
+        <div className="max-w-6xl mx-auto px-5">
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="text-xs font-medium text-plum-500 uppercase tracking-wide mr-2">
+              Find products for:
+            </span>
+            {SKIN_TYPES.map((type) => (
+              <Link
+                key={type}
+                href={`/recommend?skin_type=${type.toLowerCase()}`}
+                className="text-sm bg-white border border-plum-200 text-plum-700 px-4 py-1.5 rounded-full hover:bg-plum-700 hover:text-white hover:border-plum-700 transition-all"
+              >
+                {type} Skin
+              </Link>
+            ))}
           </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            {STEPS.map((step, i) => (
-              <div key={i} className="bg-white rounded-2xl border border-plum-100 p-8">
-                <div className="w-12 h-12 bg-plum-50 rounded-xl flex items-center justify-center mb-5">
+        </div>
+      </section>
+
+      {/* ── How it works ─────────────────────────────────── */}
+      <section className="py-20 md:py-28 bg-cream">
+        <div className="max-w-6xl mx-auto px-5">
+          <div className="max-w-xl mb-14">
+            <h2 className="text-3xl md:text-4xl font-semibold text-plum-900 mb-3">
+              How it works
+            </h2>
+            <p className="text-plum-500">
+              From your skin type to your perfect routine in three steps.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {STEPS.map((step) => (
+              <div
+                key={step.step}
+                className="bg-white rounded-2xl border border-plum-100 p-8 relative overflow-hidden"
+              >
+                <div className="absolute top-4 right-6 text-6xl font-bold text-plum-50 select-none">
+                  {step.step}
+                </div>
+                <div className="w-11 h-11 bg-plum-50 rounded-xl flex items-center justify-center text-plum-700 mb-5">
                   {step.icon}
                 </div>
                 <h3 className="font-semibold text-plum-900 text-lg mb-2">{step.title}</h3>
@@ -120,89 +161,102 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ── Top Brands ───────────────────────────────────────── */}
-      <section className="py-20 bg-plum-50">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-14">
-            <h2 className="text-3xl font-semibold text-plum-900">Featured Brands</h2>
-            <p className="text-plum-500 mt-3">Top Pakistani skincare brands in our database</p>
+      {/* ── Brands ───────────────────────────────────────── */}
+      <section className="py-20 bg-white border-y border-plum-100">
+        <div className="max-w-6xl mx-auto px-5">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
+            <div>
+              <h2 className="text-3xl md:text-4xl font-semibold text-plum-900 mb-2">
+                Pakistani Brands
+              </h2>
+              <p className="text-plum-500">Locally made, dermatologist-reviewed products</p>
+            </div>
+            <Link href="/products" className="text-sm font-medium text-plum-700 hover:text-plum-900 flex items-center gap-1 shrink-0">
+              Browse all products <ArrowRight size={14} />
+            </Link>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {BRANDS.map((brand) => (
               <Link
                 key={brand.name}
                 href={`/products?brand=${encodeURIComponent(brand.name)}`}
-                className={`rounded-2xl border p-6 text-center hover:shadow-md transition ${brand.color}`}
+                className="group bg-cream rounded-2xl border border-plum-100 p-6 hover:border-plum-300 hover:bg-plum-50 transition-all"
               >
-                <div className="font-semibold text-plum-900 text-sm">{brand.name}</div>
-                <div className="text-xs text-plum-500 mt-1">{brand.tagline}</div>
+                <div className="text-3xl mb-3">{brand.emoji}</div>
+                <div className="font-semibold text-plum-900 text-sm mb-1">{brand.name}</div>
+                <div className="text-xs text-plum-500">{brand.tagline}</div>
               </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── Featured Products ─────────────────────────────────── */}
-      <section className="py-20 bg-cream">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="flex items-end justify-between mb-10">
+      {/* ── Featured products ─────────────────────────────── */}
+      <section className="py-20 md:py-28 bg-cream">
+        <div className="max-w-6xl mx-auto px-5">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
             <div>
-              <h2 className="text-3xl font-semibold text-plum-900">Featured Products</h2>
-              <p className="text-plum-500 mt-2">Highly recommended across all skin types</p>
+              <h2 className="text-3xl md:text-4xl font-semibold text-plum-900 mb-2">
+                Top Picks
+              </h2>
+              <p className="text-plum-500">Highly recommended across all skin types</p>
             </div>
-            <Link
-              href="/products"
-              className="text-sm font-medium text-plum-700 hover:text-plum-900 flex items-center gap-1"
-            >
+            <Link href="/products" className="text-sm font-medium text-plum-700 hover:text-plum-900 flex items-center gap-1 shrink-0">
               View all <ArrowRight size={14} />
             </Link>
           </div>
 
           {featured.length === 0 ? (
-            <div className="text-center py-16 text-plum-400">
-              No products yet — upload your dataset to Supabase first.
+            <div className="text-center py-16 bg-white rounded-2xl border border-plum-100">
+              <p className="text-plum-400 text-sm">Products loading — connect Supabase to see results.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
-              {featured.map((p) => (
-                <ProductCard key={p.id} product={p} />
-              ))}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {featured.map((p) => <ProductCard key={p.id} product={p} />)}
             </div>
           )}
         </div>
       </section>
 
-      {/* ── CTA Banner ────────────────────────────────────────── */}
-      <section className="bg-plum-900 py-20">
-        <div className="max-w-2xl mx-auto px-6 text-center">
-          <h2 className="text-3xl font-semibold text-white mb-4">
-            Ready to find your skincare match?
+      {/* ── CTA ──────────────────────────────────────────── */}
+      <section className="bg-plum-900 py-20 md:py-28">
+        <div className="max-w-2xl mx-auto px-5 text-center">
+          <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">
+            Ready to find your perfect skincare?
           </h2>
-          <p className="text-plum-200 mb-8">
-            Answer 3 quick questions and our ML model will recommend the best
-            local products for your skin type and concerns.
+          <p className="text-plum-200 mb-10 leading-relaxed">
+            Answer 3 quick questions and our model will recommend the best
+            local products for your exact skin type and concerns.
           </p>
           <Link
             href="/recommend"
-            className="inline-flex items-center gap-2 bg-gold text-plum-900 font-semibold px-8 py-4 rounded-full hover:brightness-105 transition text-lg"
+            className="inline-flex items-center gap-2 bg-gold text-plum-900 font-semibold px-8 py-4 rounded-full hover:brightness-110 transition-all"
           >
-            Start Skin Quiz <ArrowRight size={20} />
+            Start Skin Quiz <ArrowRight size={18} />
           </Link>
         </div>
       </section>
 
-      {/* ── Footer ────────────────────────────────────────────── */}
+      {/* ── Footer ───────────────────────────────────────── */}
       <footer className="bg-plum-900 border-t border-plum-700 py-10">
-        <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-plum-300">
-          <div className="font-semibold text-white">MahMetics Skin Advisor</div>
-          <div className="flex gap-6">
-            <Link href="/" className="hover:text-white transition">Home</Link>
-            <Link href="/products" className="hover:text-white transition">Products</Link>
-            <Link href="/recommend" className="hover:text-white transition">Skin Advisor</Link>
+        <div className="max-w-6xl mx-auto px-5">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <img
+              src="https://mahmetics.pk/wp-content/uploads/2025/03/cropped-logo-web-transparent.png"
+              alt="MahMetics"
+              className="h-7 w-auto opacity-80"
+            />
+            <div className="flex gap-6 text-sm text-plum-300">
+              <Link href="/" className="hover:text-white transition-colors">Home</Link>
+              <Link href="/products" className="hover:text-white transition-colors">Products</Link>
+              <Link href="/recommend" className="hover:text-white transition-colors">Skin Advisor</Link>
+            </div>
+            <p className="text-xs text-plum-500">© 2025 MahMetics · Final Year Project</p>
           </div>
-          <div>© 2025 MahMetics · Final Year Project</div>
         </div>
       </footer>
-    </>
+
+    </div>
   );
 }
