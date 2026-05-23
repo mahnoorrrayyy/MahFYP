@@ -8,8 +8,7 @@ async function getFeaturedProducts(): Promise<Product[]> {
   const { data, error } = await supabase
     .from("products")
     .select("*")
-    .not("ingredients", "eq", "Not Found")
-    .order("score_combination", { ascending: false })
+    .not("ingredients", "is", null)
     .limit(8);
   if (error) { console.error(error); return []; }
   return data || [];
