@@ -7,8 +7,11 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
   title: "MahMetics — Skincare Advisor",
-  description:
-    "Find the best Pakistani skincare products for your skin type using AI-powered ingredient matching.",
+  description: "Find the best Pakistani skincare products for your skin type using AI-powered ingredient matching.",
+  icons: {
+    icon: "/icon.png",
+    apple: "/icon.png",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
