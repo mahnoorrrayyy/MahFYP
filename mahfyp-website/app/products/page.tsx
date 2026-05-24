@@ -76,14 +76,14 @@ export default async function ProductsPage({
             <span className="text-xs font-medium text-plum-500 uppercase tracking-wide w-20">
               Brand
             </span>
-            <Link href="/products" className={activePill(!searchParams.brand)}>
+            <Link href="/products" className={activePill(!params.brand)}>
               All
             </Link>
             {BRANDS.map((b) => (
               <Link
                 key={b}
                 href={`/products?brand=${encodeURIComponent(b)}`}
-                className={activePill(searchParams.brand === b)}
+                className={activePill(params.brand === b)}
               >
                 {b}
               </Link>
@@ -95,14 +95,14 @@ export default async function ProductsPage({
             <span className="text-xs font-medium text-plum-500 uppercase tracking-wide w-20">
               Concern
             </span>
-            <Link href="/products" className={activeConcernPill(!searchParams.concern)}>
+            <Link href="/products" className={activeConcernPill(!params.concern)}>
               All
             </Link>
             {CONCERNS.map((c) => (
               <Link
                 key={c}
                 href={`/products?concern=${c}`}
-                className={activeConcernPill(searchParams.concern === c)}
+                className={activeConcernPill(params.concern === c)}
               >
                 {c.replace("_", " ")}
               </Link>
