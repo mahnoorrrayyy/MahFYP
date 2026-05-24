@@ -24,10 +24,12 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  if (items.length === 0) {
-    router.push("/cart");
-    return null;
-  }
+  const [submitted, setSubmitted] = useState(false);
+
+  if (items.length === 0 && !submitted) {
+  router.push("/cart");
+  return null;
+}
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -75,6 +77,7 @@ export default function CheckoutPage() {
 
       if (itemsError) throw new Error(itemsError.message);
 
+      setSubmitted(true);
       clearCart();
       router.push(`/order-success?id=${order.id}`);
 
