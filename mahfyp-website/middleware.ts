@@ -2,6 +2,13 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  // Never redirect the login page — prevents infinite loop
+  if (pathname === "/admin/login") {
+    return NextResponse.next();
+  }
+
   let supabaseResponse = NextResponse.next({ request });
 
   const supabase = createServerClient(
@@ -25,17 +32,13 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  const { data: { user } } = await supabase.auth.getUser();
-
-  const isAdminRoute = request.nextUrl.pathname.startsWith("/admin");
-  const isLoginPage  = request.nextUrl.pathname === "/admin/login";
-
-  if (isAdminRoute && !isLoginPage && !user) {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      return NextResponse.redirect(new URL("/admin/login", request.url));
+    }
+  } catch {
     return NextResponse.redirect(new URL("/admin/login", request.url));
-  }
-
-  if (isLoginPage && user) {
-    return NextResponse.redirect(new URL("/admin", request.url));
   }
 
   return supabaseResponse;
