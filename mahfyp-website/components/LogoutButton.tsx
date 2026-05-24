@@ -1,5 +1,5 @@
 "use client";
-import { createClient } from "@/utils/supabase/client";
+import { createClient } from "@/supabase/client";
 import { useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
 

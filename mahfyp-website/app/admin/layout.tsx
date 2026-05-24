@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { BarChart2, Package, Upload, Users, LogOut } from "lucide-react";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/supabase/server";
 import { redirect } from "next/navigation";
 import LogoutButton from "@/components/LogoutButton";
 

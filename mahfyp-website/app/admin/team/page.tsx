@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { createClient as createAdminClient } from "@supabase/supabase-js";
-import { createClient } from "@/utils/supabase/client";
+import { createClient } from "@/supabase/client";
 import { Loader, Trash2, Plus, KeyRound, Shield, ShieldAlert } from "lucide-react";
 
 const adminSupabase = createAdminClient(
