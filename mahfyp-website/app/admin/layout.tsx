@@ -1,22 +1,51 @@
 import Link from "next/link";
-import { LayoutDashboard, Package, BarChart2, Upload } from "lucide-react";
+import { BarChart2, Package, Upload, Users, LogOut } from "lucide-react";
+import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
+import LogoutButton from "@/components/LogoutButton";
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) redirect("/admin/login");
+
+  const { data: profile } = await supabase
+    .from("admin_profiles")
+    .select("role, email")
+    .eq("id", user.id)
+    .single();
+
+  const role = profile?.role || "moderator";
+
   return (
     <div className="min-h-screen bg-cream flex">
 
       {/* Sidebar */}
       <aside className="w-56 bg-plum-900 text-white shrink-0 flex flex-col">
         <div className="p-5 border-b border-plum-700">
-          <p className="text-xs font-semibold text-plum-300 uppercase tracking-wide">Admin Panel</p>
-          <p className="text-sm font-bold text-white mt-0.5">MahMetics</p>
+          <img src="/logo.png" alt="MahMetics" className="h-6 w-auto mb-3 opacity-90" />
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 bg-plum-700 rounded-full flex items-center justify-center text-xs font-bold">
+              {user.email?.[0].toUpperCase()}
+            </div>
+            <div className="min-w-0">
+              <p className="text-xs text-white font-medium truncate">{user.email}</p>
+              <p className="text-xs text-plum-400 capitalize">{role}</p>
+            </div>
+          </div>
         </div>
 
         <nav className="flex flex-col gap-1 p-3 flex-1">
           {[
-            { href: "/admin",           icon: <Upload size={16} />,       label: "Upload Products" },
-            { href: "/admin/orders",    icon: <Package size={16} />,      label: "Orders" },
-            { href: "/admin/analytics", icon: <BarChart2 size={16} />,    label: "Analytics" },
+            { href: "/admin",           icon: <Upload size={15} />,    label: "Upload Products" },
+            { href: "/admin/orders",    icon: <Package size={15} />,   label: "Orders"          },
+            { href: "/admin/analytics", icon: <BarChart2 size={15} />, label: "Analytics"       },
+            { href: "/admin/team",      icon: <Users size={15} />,     label: "Manage Admins"   },
           ].map((item) => (
             <Link
               key={item.href}
@@ -29,15 +58,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           ))}
         </nav>
 
-        <div className="p-4 border-t border-plum-700">
-          <Link href="/" className="text-xs text-plum-400 hover:text-white">
+        <div className="p-3 border-t border-plum-700 flex flex-col gap-2">
+          <Link href="/" className="text-xs text-plum-400 hover:text-white px-3 py-1">
             ← Back to website
           </Link>
+          <LogoutButton />
         </div>
       </aside>
 
-      {/* Content */}
-      <div className="flex-1 overflow-auto">
+      {/* Pass role via data attribute for client components */}
+      <div className="flex-1 overflow-auto" data-role={role}>
         {children}
       </div>
 
