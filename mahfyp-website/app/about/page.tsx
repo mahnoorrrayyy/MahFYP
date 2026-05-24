@@ -22,13 +22,6 @@ const TEAM = [
     paragraph:
       "This project was completed under the supervision of Muhammad Faiez at the Department of CS&IT, University of Lahore. His academic guidance, structured feedback, and consistent oversight helped the team stay focused and deliver a technically sound final year project. His mentorship ensured that the project met both the academic standards and real-world applicability expected at the university level.",
   },
-  {
-    name: "M. Ahmad Zia",
-    photo: "/ahmad.png",
-    heading: "Co-Supervisor & Mentor",
-    paragraph:
-      "The vision and direction of MahMetics would not have been possible without the mentorship of M. Ahmad Zia. A recognized expert in Ecommerce and Agentic AI for E-commerce, his industry insight shaped every major decision in the project — from the recommendation architecture to the ecommerce integration strategy. He consistently pushed the team to think beyond academics and build something that works in the real world.",
-  },
 ];
 
 export default function AboutPage() {
@@ -45,8 +38,8 @@ export default function AboutPage() {
             About MahMetics
           </h1>
           <p className="text-plum-200 text-lg leading-relaxed">
-            MahMetics is an AI-powered skincare recommendation platform built as a Final Year Project
-            at the{" "}
+            MahMetics is an AI-powered skincare recommendation platform built
+            as a Final Year Project at the{" "}
             <Link
               href="https://cs.uol.edu.pk"
               target="_blank"
@@ -55,9 +48,10 @@ export default function AboutPage() {
             >
               Department of CS&IT, University of Lahore
             </Link>
-            . The platform uses machine learning to analyse cosmetic ingredients and recommend
-            the most suitable local Pakistani skincare products based on a user&apos;s skin type
-            and concerns — making personalised skincare accessible and science-backed for everyone.
+            . The platform uses machine learning to analyse cosmetic ingredients
+            and recommend the most suitable local Pakistani skincare products
+            based on a user&apos;s skin type and concerns — making personalised
+            skincare accessible and science-backed for everyone.
           </p>
         </div>
       </section>
@@ -108,6 +102,8 @@ export default function AboutPage() {
           </div>
 
           <div className="flex flex-col gap-16">
+
+            {/* First 3 members from array */}
             {TEAM.map((member, index) => {
               const imageLeft = index % 2 === 0;
               return (
@@ -115,9 +111,8 @@ export default function AboutPage() {
                   key={member.name}
                   className={`flex flex-col ${imageLeft ? "md:flex-row" : "md:flex-row-reverse"} gap-10 items-center`}
                 >
-                  {/* Photo */}
                   <div className="w-full md:w-5/12 shrink-0">
-                    <div className="rounded-3xl overflow-hidden border border-plum-100 shadow-lg aspect-square bg-plum-50">
+                    <div className="rounded-3xl overflow-hidden border border-plum-100 shadow-lg aspect-[3/4] bg-plum-50">
                       <img
                         src={member.photo}
                         alt={member.name}
@@ -126,7 +121,6 @@ export default function AboutPage() {
                     </div>
                   </div>
 
-                  {/* Text */}
                   <div className="w-full md:w-7/12">
                     <p className="text-xs font-semibold tracking-widest uppercase text-gold mb-2">
                       {member.heading}
@@ -137,27 +131,56 @@ export default function AboutPage() {
                     <p className="text-plum-500 leading-relaxed text-base">
                       {member.paragraph}
                     </p>
-
-                    {/* Special link for Ahmad Zia */}
-                    {member.name === "M. Ahmad Zia" && (
-                      <Link
-                        href="https://ahmadzia.com"
-                        target="_blank"
-                        rel="dofollow"
-                        className="inline-block mt-4 text-sm text-plum-700 font-medium underline hover:text-plum-900"
-                      >
-                        ahmadzia.com
-                      </Link>
-                    )}
                   </div>
                 </div>
               );
             })}
+
+            {/* Ahmad Zia — 4th member, image on right, link in paragraph */}
+            <div className="flex flex-col md:flex-row-reverse gap-10 items-center">
+              <div className="w-full md:w-5/12 shrink-0">
+                <div className="rounded-3xl overflow-hidden border border-plum-100 shadow-lg aspect-[3/4] bg-plum-50">
+                  <img
+                    src="/ahmad.png"
+                    alt="M. Ahmad Zia"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+
+              <div className="w-full md:w-7/12">
+                <p className="text-xs font-semibold tracking-widest uppercase text-gold mb-2">
+                  Co-Supervisor & Mentor
+                </p>
+                <h3 className="text-2xl md:text-3xl font-semibold text-plum-900 mb-4">
+                  M. Ahmad Zia
+                </h3>
+                <p className="text-plum-500 leading-relaxed text-base">
+                  The vision and direction of MahMetics would not have been
+                  possible without the mentorship of M. Ahmad Zia. A recognized
+                  expert in Ecommerce and Agentic AI for E-commerce (
+                  <Link
+                    href="https://ahmadzia.com"
+                    target="_blank"
+                    rel="dofollow"
+                    className="text-plum-700 underline hover:text-plum-900"
+                  >
+                    ahmadzia.com
+                  </Link>
+                  ), his industry insight shaped every major decision in the
+                  project — from the recommendation architecture to the
+                  ecommerce integration strategy. He consistently pushed the
+                  team to think beyond academics and build something that works
+                  in the real world.
+                </p>
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
 
-      {/* Footer CTA */}
+      {/* CTA */}
       <section className="bg-plum-900 py-16">
         <div className="max-w-2xl mx-auto px-5 text-center">
           <h2 className="text-2xl font-semibold text-white mb-3">
