@@ -123,7 +123,7 @@ export default function AnalyticsPage() {
                   <XAxis dataKey="label" tick={{ fontSize: 12, fill: "#a0527e" }} />
                   <YAxis tick={{ fontSize: 12, fill: "#a0527e" }} />
                   <Tooltip
-                    formatter={(value: number) => [`PKR ${value.toLocaleString()}`, "Revenue"]}
+                    formatter={(value) => [`PKR ${Number(value).toLocaleString()}`, "Revenue"]}
                     contentStyle={{ borderRadius: "12px", border: "1px solid #f0e2ec" }}
                   />
                   <Bar dataKey="revenue" fill="#6e2b55" radius={[6, 6, 0, 0]} />
@@ -144,7 +144,7 @@ export default function AnalyticsPage() {
                   <XAxis dataKey="label" tick={{ fontSize: 12, fill: "#a0527e" }} />
                   <YAxis tick={{ fontSize: 12, fill: "#a0527e" }} />
                   <Tooltip
-                    formatter={(value: number) => [value, "Orders"]}
+                    formatter={(value) => [Number(value), "Orders"]}
                     contentStyle={{ borderRadius: "12px", border: "1px solid #f0e2ec" }}
                   />
                   <Line dataKey="orders" stroke="#c9956c" strokeWidth={2} dot={{ fill: "#c9956c" }} />
