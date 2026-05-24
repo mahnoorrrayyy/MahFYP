@@ -44,14 +44,20 @@ function activeConcernPill(isActive: boolean) {
 export default async function ProductsPage({
   searchParams,
 }: {
-  searchParams: { brand?: string; concern?: string };
+  searchParams: Promise<{ brand?: string; concern?: string; skin_type?: string }>;
 }) {
-  const products = await getProducts(searchParams.brand);
+  const params = await searchParams;
+  const products = await getProducts(params.brand);
 
-  const filtered = searchParams.concern
+  const filtered = params.concern
     ? products.filter((p) =>
-        p.concerns_str?.toLowerCase().includes(searchParams.concern!)
+        p.concerns_str?.toLowerCase().includes(params.concern!)
       )
+    : params.skin_type
+    ? products.filter((p) => {
+        const key = `suitable_${params.skin_type}` as keyof Product;
+        return (p[key] as number) === 1;
+      })
     : products;
 
   return (

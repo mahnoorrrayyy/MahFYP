@@ -19,7 +19,6 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-8">
           <Link href="/" className="text-sm text-plum-500 hover:text-plum-900 transition-colors">Home</Link>
           <Link href="/products" className="text-sm text-plum-500 hover:text-plum-900 transition-colors">Products</Link>
-          <Link href="/recommend" className="text-sm text-plum-500 hover:text-plum-900 transition-colors">Skin Advisor</Link>
           <Link href="/about" className="text-sm text-plum-500 hover:text-plum-900 transition-colors">About Us</Link>
         </div>
 
