@@ -176,14 +176,14 @@ function ScoreBar({ score }: { score: number }) {
 <div className="mt-2">
   <TransparencyDisclosure
     allergens={
-      Array.isArray(p.allergens) ? p.allergens :
-      typeof p.allergens === "string" ? JSON.parse(p.allergens || "[]") : []
+      Array.isArray(product.allergens) ? product.allergens :
+      typeof product.allergens === "string" ? JSON.parse(product.allergens || "[]") : []
     }
     cscpFlags={
-      Array.isArray(p.cscp_flags) ? p.cscp_flags :
-      typeof p.cscp_flags === "string" ? JSON.parse(p.cscp_flags || "[]") : []
+      Array.isArray(product.cscp_flags) ? product.cscp_flags :
+      typeof product.cscp_flags === "string" ? JSON.parse(product.cscp_flags || "[]") : []
     }
-    pregnancyFlag={p.pregnancy_flag || false}
+    pregnancyFlag={product.pregnancy_flag || false}
     compact={true}
   />
 </div>
