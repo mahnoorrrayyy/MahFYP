@@ -172,23 +172,6 @@ function ScoreBar({ score }: { score: number }) {
     </div>
   );
 }
-{/* Compact transparency badges */}
-<div className="mt-2">
-  <TransparencyDisclosure
-    allergens={
-      Array.isArray(product.allergens) ? product.allergens :
-      typeof product.allergens === "string" ? JSON.parse(product.allergens || "[]") : []
-    }
-    cscpFlags={
-      Array.isArray(product.cscp_flags) ? product.cscp_flags :
-      typeof product.cscp_flags === "string" ? JSON.parse(product.cscp_flags || "[]") : []
-    }
-    pregnancyFlag={product.pregnancy_flag || false}
-    compact={true}
-  />
-</div>
-
-// ── Result product card ───────────────────────────────────────────────────────
 function ResultCard({
   product,
   skinType,
@@ -201,6 +184,18 @@ function ResultCard({
 
   const concerns = product.concerns_str
     ? product.concerns_str.split(",").slice(0, 2).map((c) => c.trim()).filter(Boolean)
+    : [];
+
+  const allergens = Array.isArray(product.allergens)
+    ? product.allergens
+    : typeof product.allergens === "string"
+    ? JSON.parse(product.allergens || "[]")
+    : [];
+
+  const cscpFlags = Array.isArray(product.cscp_flags)
+    ? product.cscp_flags
+    : typeof product.cscp_flags === "string"
+    ? JSON.parse(product.cscp_flags || "[]")
     : [];
 
   return (
@@ -250,10 +245,18 @@ function ResultCard({
         )}
 
         {/* ML Match score */}
-        <div>
+        <div className="mb-2">
           <p className="text-xs text-plum-400">ML Match Score</p>
           <ScoreBar score={score} />
         </div>
+
+        {/* Transparency badges */}
+        <TransparencyDisclosure
+          allergens={allergens}
+          cscpFlags={cscpFlags}
+          pregnancyFlag={product.pregnancy_flag || false}
+          compact={true}
+        />
       </div>
     </Link>
   );
