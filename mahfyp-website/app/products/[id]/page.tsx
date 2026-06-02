@@ -3,6 +3,7 @@ import { Package } from "lucide-react";
 import type { Product } from "@/lib/types";
 import Link from "next/link";
 import AddToCartButton from "@/components/AddToCartButton";
+import TransparencyDisclosure from "@/components/TransparencyDisclosure";
 
 async function getProduct(id: string): Promise<Product | null> {
   const { data, error } = await supabase
@@ -146,6 +147,27 @@ export default async function ProductPage({
             </div>
           </div>
         )}
+        {/* Transparency disclosures */}
+          <div className="mt-6">
+            <TransparencyDisclosure
+              allergens={
+                Array.isArray(product.allergens)
+                  ? product.allergens
+                  : typeof product.allergens === "string"
+                  ? JSON.parse(product.allergens || "[]")
+                  : []
+              }
+              cscpFlags={
+                Array.isArray(product.cscp_flags)
+                  ? product.cscp_flags
+                  : typeof product.cscp_flags === "string"
+                  ? JSON.parse(product.cscp_flags || "[]")
+                  : []
+              }
+              pregnancyFlag={product.pregnancy_flag || false}
+              compact={false}
+            />
+          </div>
 
       </div>
     </div>

@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import type { Product } from "@/lib/types";
+import TransparencyDisclosure from "@/components/TransparencyDisclosure";
 import Link from "next/link";
 import { ArrowRight, ArrowLeft, Check, Package, Loader } from "lucide-react";
 
@@ -169,6 +170,21 @@ function ScoreBar({ score }: { score: number }) {
     </div>
   );
 }
+{/* Compact transparency badges */}
+<div className="mt-2">
+  <TransparencyDisclosure
+    allergens={
+      Array.isArray(p.allergens) ? p.allergens :
+      typeof p.allergens === "string" ? JSON.parse(p.allergens || "[]") : []
+    }
+    cscpFlags={
+      Array.isArray(p.cscp_flags) ? p.cscp_flags :
+      typeof p.cscp_flags === "string" ? JSON.parse(p.cscp_flags || "[]") : []
+    }
+    pregnancyFlag={p.pregnancy_flag || false}
+    compact={true}
+  />
+</div>
 
 // ── Result product card ───────────────────────────────────────────────────────
 function ResultCard({
@@ -248,6 +264,7 @@ export default function SkinQuiz() {
   const [concern, setConcern]     = useState("");
   const [products, setProducts]   = useState<Product[]>([]);
   const [loading, setLoading]     = useState(false);
+  const [isPregnant, setIsPregnant] = useState(false);
 
   async function fetchResults(selectedSkinType: string, selectedConcern: string) {
     setLoading(true);
@@ -261,29 +278,45 @@ export default function SkinQuiz() {
       .select("*")
       .eq(suitableCol, 1);
 
-    if (error) {
-      console.error(error);
-      setLoading(false);
-      return;
-    }
+    if (error) { console.error(error); setLoading(false); return; }
 
-    let results = (data as Product[]) || [];
+    let candidates = (data as Product[]) || [];
 
-    // Filter by concern if selected
+    // Filter by concern
     if (selectedConcern) {
-      results = results.filter((p) =>
+      candidates = candidates.filter((p) =>
         p.concerns_str?.toLowerCase().includes(selectedConcern)
       );
     }
 
-    // Sort by ML score descending
-    results.sort((a, b) => {
-      const scoreA = (a[scoreCol as keyof Product] as number) || 0;
-      const scoreB = (b[scoreCol as keyof Product] as number) || 0;
-      return scoreB - scoreA;
+    // For pregnancy: filter out pregnancy_flag = true
+    if (isPregnant) {
+      candidates = candidates.filter((p) => !p.pregnancy_flag);
+    }
+
+    // Normalize risk_score to 0-1 across candidate set
+    const riskScores = candidates.map((p) => p.risk_score || 0);
+    const maxRisk    = Math.max(...riskScores, 1);
+    const minRisk    = Math.min(...riskScores, 0);
+    const riskRange  = maxRisk - minRisk || 1;
+
+    // For sensitive skin: drop top risk quartile before ranking
+    if (selectedSkinType === "sensitive") {
+      const sorted  = [...candidates].sort((a, b) => (b.risk_score || 0) - (a.risk_score || 0));
+      const cutoff  = sorted[Math.floor(sorted.length * 0.25)]?.risk_score ?? maxRisk;
+      candidates    = candidates.filter((p) => (p.risk_score || 0) <= cutoff);
+    }
+
+    // Re-rank: skin_type_score - 0.3 * risk_norm
+    candidates.sort((a, b) => {
+      const sA      = (a[scoreCol as keyof Product] as number) || 0;
+      const sB      = (b[scoreCol as keyof Product] as number) || 0;
+      const rNormA  = ((a.risk_score || 0) - minRisk) / riskRange;
+      const rNormB  = ((b.risk_score || 0) - minRisk) / riskRange;
+      return (sB - 0.3 * rNormB) - (sA - 0.3 * rNormA);
     });
 
-    setProducts(results);
+    setProducts(candidates);
     setLoading(false);
   }
 
@@ -300,8 +333,8 @@ export default function SkinQuiz() {
   }
 
   function handleGetResults() {
-    if (concern) fetchResults(skinType, concern);
-  }
+  if (concern) fetchResults(skinType, concern);
+}
 
   function resetQuiz() {
     setSkinType("");
@@ -466,6 +499,27 @@ export default function SkinQuiz() {
       </div>
     );
   }
+  {/* Pregnancy option */}
+    <div className="mt-6 bg-pink-50 border border-pink-200 rounded-2xl p-5">
+      <label className="flex items-start gap-3 cursor-pointer">
+        <input
+          type="checkbox"
+          checked={isPregnant}
+          onChange={(e) => setIsPregnant(e.target.checked)}
+          className="mt-0.5 w-4 h-4 accent-plum-700"
+        />
+        <div>
+          <p className="text-sm font-semibold text-plum-900">
+            I am pregnant or planning to become pregnant
+          </p>
+          <p className="text-xs text-plum-500 mt-0.5">
+            Products containing ingredients flagged as reproductive concerns
+            by California&apos;s Safe Cosmetics Program will be deprioritised
+            in your results.
+          </p>
+        </div>
+      </label>
+    </div>
 
   // ── Step 3: Results ─────────────────────────────────────────────────────────
   return (

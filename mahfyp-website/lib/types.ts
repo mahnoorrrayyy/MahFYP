@@ -18,4 +18,14 @@ export type Product = {
   suitable_normal: number;
   suitable_oily: number;
   suitable_sensitive: number;
+  // Transparency layer
+  allergen_count?: number;
+  allergens?: string[];
+  risk_score?: number;
+  cscp_flags?: Array<{
+    ingredient: string;
+    endpoint: string;
+    condition: string;
+  }>;
+  pregnancy_flag?: boolean;
 };
