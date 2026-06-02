@@ -6,6 +6,8 @@ import TransparencyDisclosure from "@/components/TransparencyDisclosure";
 import Link from "next/link";
 import { ArrowRight, ArrowLeft, Check, Package, Loader } from "lucide-react";
 
+
+
 // ── Skin type data ────────────────────────────────────────────────────────────
 const SKIN_TYPES = [
   {
